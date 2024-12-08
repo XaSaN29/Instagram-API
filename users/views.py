@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from users.models import User, NEW, VERIFICATION_CODE, UserConfirmation, VIA_EMAIL, VIA_PHONE
-from users.serializers import UserSerializer, ConfSerializer, UserChangeSerializer, UserPhotoSerializer
+from users.serializers import UserSerializer, ConfSerializer, UserChangeSerializer, UserPhotoSerializer, LoginSerializer
 from users.utility import send_email_cod
 
 
@@ -125,6 +125,26 @@ class UserPhoneView(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserPhotoSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class UserLoginAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    @extend_schema(
+        request=LoginSerializer
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+
+            return Response({
+                'access_token': user.token()['access_token'],
+                'refresh_token': user.token()['refresh_token']
+            }, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 

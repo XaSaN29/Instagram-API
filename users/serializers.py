@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -151,6 +152,23 @@ class UserPhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['avatar']
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        user = authenticate(username=username, password=password)
+        if not user:
+            raise serializers.ValidationError("Username yoki parol noto'g'ri!")
+
+        attrs['user'] = user
+        return attrs
+
 
 
 

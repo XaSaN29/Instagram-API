@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from users.views import UserSignUpView, UserConfirmationView, NewCode, UserChangeView, UserPhoneView
+from users.views import UserSignUpView, UserConfirmationView, NewCode, UserChangeView, UserPhoneView, UserLoginAPIView
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 
@@ -26,6 +26,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('user/', UserSignUpView.as_view(), name='user-create'),
+    path('user-login/', UserLoginAPIView.as_view(), name='user-login'),
     path('code/', UserConfirmationView.as_view(), name='code'),
     path('new_code/', NewCode.as_view(), name='new_code'),
     path('user_change/', UserChangeView.as_view(), name='user_change'),
