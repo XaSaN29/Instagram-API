@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # my_apps
     'users',
+    'qost',
 
     # install apps
     'rest_framework',
